@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智聘通 - 智能求职招聘平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💼</text></svg>">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="showPage('home')"><i class="fas fa-briefcase"></i><span>智聘通</span></div>
+            <div class="nav-links" id="navLinks">
+                <a href="#" class="nav-link active" data-page="home"><i class="fas fa-house"></i> 首页</a>
+                <a href="#" class="nav-link" data-page="jobs"><i class="fas fa-magnifying-glass"></i> 找工作</a>
+                <a href="#" class="nav-link" data-page="companies"><i class="fas fa-building"></i> 公司</a>
+                <a href="#" class="nav-link" data-page="salary"><i class="fas fa-chart-column"></i> 薪资</a>
+                <a href="#" class="nav-link" data-page="blog"><i class="fas fa-newspaper"></i> 职场</a>
+                <a href="#" class="nav-link auth-only" data-page="dashboard" style="display:none"><i class="fas fa-gauge-high"></i> 工作台</a>
+                <a href="#" class="nav-link auth-only" data-page="messages" style="display:none">
+                    <i class="fas fa-comment-dots"></i> 消息<span class="badge" id="msgBadge" style="display:none">0</span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-icon theme-toggle" onclick="toggleTheme()" title="切换深色模式"><i class="fas fa-moon"></i></button>
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-ghost btn-sm" onclick="showModal('loginModal')">登录</button>
+                    <button class="btn btn-primary btn-sm" onclick="showModal('registerModal')">注册</button>
+                </div>
+                <div class="user-menu" id="userMenu" style="display:none">
+                    <div class="user-avatar" onclick="toggleDropdown()"><span id="userInitial">U</span></div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-header"><strong id="dropdownName">用户名</strong><span id="dropdownRole" class="role-badge">求职者</span></div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" onclick="showPage('profile')"><i class="fas fa-user-circle"></i> 个人中心</a>
+                        <a href="#" onclick="showPage('resume')" class="jobseeker-only"><i class="fas fa-file-lines"></i> 我的简历</a>
+                        <a href="#" onclick="showPage('applications')" class="jobseeker-only"><i class="fas fa-paper-plane"></i> 投递记录</a>
+                        <a href="#" onclick="showPage('favorites')" class="jobseeker-only"><i class="fas fa-heart"></i> 收藏职位</a>
+                        <a href="#" onclick="showPage('postJob')" class="recruiter-only"><i class="fas fa-circle-plus"></i> 发布职位</a>
+                        <a href="#" onclick="showPage('myJobs')" class="recruiter-only"><i class="fas fa-list-check"></i> 我的职位</a>
+                        <a href="#" onclick="showPage('candidates')" class="recruiter-only"><i class="fas fa-user-group"></i> 候选人</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-right-from-bracket"></i> 退出登录</a>
+                    </div>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ==================== HOME ==================== -->
+        <div class="page active" id="homePage">
+            <section class="hero">
+                <div class="hero-bg"><div class="hero-particles" id="particles"></div></div>
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">发现你的下一份</span><br>
+                        <span class="typing-text" id="typingText"></span><span class="cursor">|</span>
+                    </h1>
+                    <p class="hero-subtitle">连接优秀人才与理想机会，AI 驱动的智能求职招聘平台</p>
+                    <div class="search-box">
+                        <div class="search-input-group">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <input type="text" id="heroSearch" placeholder="搜索职位、公司或关键词" onkeypress="handleHeroSearch(event)">
+                            <button class="btn btn-primary" onclick="performHeroSearch()">搜索</button>
+                        </div>
+                        <div class="hot-keywords">
+                            <span class="hot-label">热门：</span>
+                            <a href="#" onclick="searchKeyword('前端开发')">前端开发</a>
+                            <a href="#" onclick="searchKeyword('Java')">Java</a>
+                            <a href="#" onclick="searchKeyword('产品经理')">产品经理</a>
+                            <a href="#" onclick="searchKeyword('数据分析')">数据分析</a>
+                            <a href="#" onclick="searchKeyword('人工智能')">人工智能</a>
+                        </div>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item"><span class="stat-number" data-target="50000">0</span><span class="stat-label">活跃职位</span></div>
+                        <div class="stat-item"><span class="stat-number" data-target="10000">0</span><span class="stat-label">入驻企业</span></div>
+                        <div class="stat-item"><span class="stat-number" data-target="200000">0</span><span class="stat-label">求职者</span></div>
+                        <div class="stat-item"><span class="stat-number" data-target="95">0</span><span class="stat-label">满意度%</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section categories-section">
+                <div class="container">
+                    <div class="section-header"><h2>热门职位分类</h2><p>探索不同领域的职业机会</p></div>
+                    <div class="categories-grid">
+                        <div class="category-card" onclick="searchCategory('技术')"><div class="category-icon tech"><i class="fas fa-code"></i></div><h3>技术/研发</h3><p>12,580 个职位</p></div>
+                        <div class="category-card" onclick="searchCategory('产品')"><div class="category-icon product"><i class="fas fa-lightbulb"></i></div><h3>产品/设计</h3><p>8,320 个职位</p></div>
+                        <div class="category-card" onclick="searchCategory('市场')"><div class="category-icon marketing"><i class="fas fa-bullhorn"></i></div><h3>市场/运营</h3><p>9,450 个职位</p></div>
+                        <div class="category-card" onclick="searchCategory('销售')"><div class="category-icon sales"><i class="fas fa-chart-line"></i></div><h3>销售/商务</h3><p>7,890 个职位</p></div>
+                        <div class="category-card" onclick="searchCategory('人事')"><div class="category-icon hr"><i class="fas fa-users"></i></div><h3>人事/行政</h3><p>5,670 个职位</p></div>
+                        <div class="category-card" onclick="searchCategory('金融')"><div class="category-icon finance"><i class="fas fa-coins"></i></div><h3>金融/财务</h3><p>6,230 个职位</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <div class="section-header"><h2>精选推荐职位</h2><a href="#" onclick="showPage('jobs')" class="view-all">查看更多 <i class="fas fa-arrow-right"></i></a></div>
+                    <div class="jobs-grid" id="featuredJobs"></div>
+                </div>
+            </section>
+
+            <section class="section" style="background:var(--bg-secondary)">
+                <div class="container">
+                    <div class="section-header"><h2>知名企业</h2><a href="#" onclick="showPage('companies')" class="view-all">查看更多 <i class="fas fa-arrow-right"></i></a></div>
+                    <div class="companies-scroll" id="homeCompanies"></div>
+                </div>
+            </section>
+
+            <section class="section features-section">
+                <div class="container">
+                    <div class="section-header"><h2>为什么选择智聘通</h2><p>打造最优质的求职招聘体验</p></div>
+                    <div class="features-grid">
+                        <div class="feature-card"><div class="feature-icon"><i class="fas fa-robot"></i></div><h3>AI 智能匹配</h3><p>基于深度学习算法，精准匹配求职者与职位需求</p></div>
+                        <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-halved"></i></div><h3>隐私保护</h3><p>严格数据加密和隐私保护，信息安全有保障</p></div>
+                        <div class="feature-card"><div class="feature-icon"><i class="fas fa-comments"></i></div><h3>即时沟通</h3><p>内置即时通讯系统，求职者与招聘者实时交流</p></div>
+                        <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-pie"></i></div><h3>数据洞察</h3><p>行业薪资报告和就业趋势分析，助你做出明智决策</p></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== JOBS ==================== -->
+        <div class="page" id="jobsPage">
+            <div class="container">
+                <div class="page-header"><h1>找工作</h1><p>发现适合你的职业机会</p></div>
+                <div class="jobs-layout">
+                    <aside class="jobs-sidebar">
+                        <div class="filter-card">
+                            <h3><i class="fas fa-sliders"></i> 筛选条件</h3>
+                            <div class="filter-group"><label>工作地点</label><select id="filterCity" onchange="filterJobs()"><option value="">全部城市</option><option value="北京">北京</option><option value="上海">上海</option><option value="深圳">深圳</option><option value="杭州">杭州</option><option value="广州">广州</option><option value="成都">成都</option></select></div>
+                            <div class="filter-group"><label>工作经验</label><select id="filterExp" onchange="filterJobs()"><option value="">不限经验</option><option value="应届生">应届生</option><option value="1-3年">1-3年</option><option value="3-5年">3-5年</option><option value="5-10年">5-10年</option><option value="10年以上">10年以上</option></select></div>
+                            <div class="filter-group"><label>学历要求</label><select id="filterEdu" onchange="filterJobs()"><option value="">不限学历</option><option value="大专">大专</option><option value="本科">本科</option><option value="硕士">硕士</option><option value="博士">博士</option></select></div>
+                            <div class="filter-group"><label>薪资范围</label><select id="filterSalary" onchange="filterJobs()"><option value="">不限薪资</option><option value="10000">10K+</option><option value="20000">20K+</option><option value="30000">30K+</option><option value="50000">50K+</option></select></div>
+                            <button class="btn btn-outline btn-block btn-sm" onclick="resetFilters()">重置筛选</button>
+                        </div>
+                    </aside>
+                    <div class="jobs-main">
+                        <div class="jobs-toolbar">
+                            <div class="jobs-count">共 <span id="jobsCount">0</span> 个职位</div>
+                            <div class="jobs-sort"><select id="jobsSort" onchange="sortJobs()"><option value="default">默认排序</option><option value="salary-high">薪资最高</option><option value="salary-low">薪资最低</option><option value="date">最新发布</option></select></div>
+                        </div>
+                        <div class="jobs-list" id="jobsList"></div>
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== COMPANIES ==================== -->
+        <div class="page" id="companiesPage">
+            <div class="container">
+                <div class="page-header"><h1>知名企业</h1><p>探索优质雇主品牌</p></div>
+                <div class="companies-search"><input type="text" placeholder="🔍 搜索公司名称" id="companySearch" oninput="filterCompanies()"></div>
+                <div class="companies-grid" id="companiesList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== SALARY ==================== -->
+        <div class="page" id="salaryPage">
+            <div class="container">
+                <div class="page-header"><h1>薪资查询</h1><p>了解各行业薪资水平和趋势</p></div>
+                <div class="dashboard-stats">
+                    <div class="dashboard-stat"><div class="dashboard-stat-icon purple"><i class="fas fa-arrow-trend-up"></i></div><div class="dashboard-stat-info"><h3>¥18,500</h3><p>全国平均月薪</p></div></div>
+                    <div class="dashboard-stat"><div class="dashboard-stat-icon blue"><i class="fas fa-building"></i></div><div class="dashboard-stat-info"><h3>¥25,800</h3><p>一线城市平均</p></div></div>
+                    <div class="dashboard-stat"><div class="dashboard-stat-icon green"><i class="fas fa-laptop-code"></i></div><div class="dashboard-stat-info"><h3>¥32,000</h3><p>技术岗位平均</p></div></div>
+                    <div class="dashboard-stat"><div class="dashboard-stat-icon orange"><i class="fas fa-fire"></i></div><div class="dashboard-stat-info"><h3>+12.5%</h3><p>同比增幅</p></div></div>
+                </div>
+                <div class="salary-table-card" style="background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--divider);overflow:hidden;margin-top:24px">
+                    <div style="padding:24px 28px;border-bottom:0.5px solid var(--divider)"><h3 style="font-size:18px;font-weight:600"><i class="fas fa-table" style="color:var(--apple-blue);margin-right:8px"></i>热门岗位薪资排行</h3></div>
+                    <table style="width:100%;border-collapse:collapse">
+                        <thead><tr style="background:var(--bg-tertiary)"><th style="padding:14px 24px;text-align:left;font-size:13px;color:var(--text-secondary);font-weight:600">排名</th><th style="padding:14px 24px;text-align:left;font-size:13px;color:var(--text-secondary);font-weight:600">岗位</th><th style="padding:14px 24px;text-align:left;font-size:13px;color:var(--text-secondary);font-weight:600">平均薪资</th><th style="padding:14px 24px;text-align:left;font-size:13px;color:var(--text-secondary);font-weight:600">薪资范围</th><th style="padding:14px 24px;text-align:left;font-size:13px;color:var(--text-secondary);font-weight:600">同比</th></tr></thead>
+                        <tbody id="salaryTableBody"></tbody>
+                    </table>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+                    <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:28px;border:1px solid var(--divider)">
+                        <h3 style="font-size:17px;font-weight:600;margin-bottom:20px"><i class="fas fa-city" style="color:var(--apple-blue);margin-right:8px"></i>城市薪资对比</h3>
+                        <div id="citySalaryChart"></div>
+                    </div>
+                    <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:28px;border:1px solid var(--divider)">
+                        <h3 style="font-size:17px;font-weight:600;margin-bottom:20px"><i class="fas fa-graduation-cap" style="color:var(--apple-blue);margin-right:8px"></i>学历与薪资</h3>
+                        <div id="eduSalaryChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== BLOG ==================== -->
+        <div class="page" id="blogPage">
+            <div class="container">
+                <div class="page-header"><h1>职场资讯</h1><p>求职技巧、行业动态、职业规划</p></div>
+                <div class="applications-tabs" style="margin-bottom:32px">
+                    <button class="tab-btn active" onclick="filterBlog('all',this)">全部</button>
+                    <button class="tab-btn" onclick="filterBlog('tips',this)">求职技巧</button>
+                    <button class="tab-btn" onclick="filterBlog('industry',this)">行业动态</button>
+                    <button class="tab-btn" onclick="filterBlog('career',this)">职业规划</button>
+                    <button class="tab-btn" onclick="filterBlog('interview',this)">面试经验</button>
+                </div>
+                <div class="blog-grid" id="blogGrid"></div>
+            </div>
+        </div>
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <div class="page" id="dashboardPage">
+            <div class="container">
+                <div class="dashboard-header"><h1>工作台</h1><p id="dashboardGreeting">欢迎回来！</p></div>
+                <div class="dashboard-stats" id="dashboardStats"></div>
+                <div class="dashboard-content" id="dashboardContent"></div>
+            </div>
+        </div>
+
+        <!-- ==================== RESUME ==================== -->
+        <div class="page" id="resumePage">
+            <div class="container">
+                <div class="page-header"><h1>我的简历</h1><button class="btn btn-primary btn-sm" onclick="showResumePreview()"><i class="fas fa-eye"></i> 预览简历</button></div>
+                <div class="resume-layout">
+                    <div class="resume-sidebar">
+                        <div class="resume-progress">
+                            <h3>简历完成度</h3>
+                            <div class="progress-ring"><svg viewBox="0 0 120 120"><circle class="progress-bg" cx="60" cy="60" r="54"/><circle class="progress-fill" cx="60" cy="60" r="54" id="progressCircle"/></svg><span class="progress-text" id="progressText">0%</span></div>
+                        </div>
+                        <nav class="resume-nav">
+                            <a href="#" class="active" data-section="basic" onclick="switchResumeSection('basic',this);return false"><i class="fas fa-user"></i> 基本信息</a>
+                            <a href="#" data-section="education" onclick="switchResumeSection('education',this);return false"><i class="fas fa-graduation-cap"></i> 教育经历</a>
+                            <a href="#" data-section="experience" onclick="switchResumeSection('experience',this);return false"><i class="fas fa-briefcase"></i> 工作经历</a>
+                            <a href="#" data-section="skills" onclick="switchResumeSection('skills',this);return false"><i class="fas fa-gear"></i> 专业技能</a>
+                            <a href="#" data-section="projects" onclick="switchResumeSection('projects',this);return false"><i class="fas fa-diagram-project"></i> 项目经历</a>
+                            <a href="#" data-section="self" onclick="switchResumeSection('self',this);return false"><i class="fas fa-star"></i> 自我评价</a>
+                        </nav>
+                    </div>
+                    <div class="resume-main">
+                        <div class="resume-section active" id="resumeBasic"><h2>基本信息</h2>
+                            <form class="resume-form">
+                                <div class="form-row"><div class="form-group"><label>姓名 <span class="required">*</span></label><input type="text" id="resumeName" placeholder="请输入姓名"></div><div class="form-group"><label>手机号 <span class="required">*</span></label><input type="tel" id="resumePhone" placeholder="请输入手机号"></div></div>
+                                <div class="form-row"><div class="form-group"><label>邮箱 <span class="required">*</span></label><input type="email" id="resumeEmail" placeholder="请输入邮箱"></div><div class="form-group"><label>求职状态</label><select id="jobStatus"><option value="在职-考虑机会">在职-考虑机会</option><option value="离职-随时到岗">离职-随时到岗</option><option value="在校生">在校生</option></select></div></div>
+                                <div class="form-row"><div class="form-group"><label>所在城市</label><input type="text" id="resumeCity" placeholder="如：北京"></div><div class="form-group"><label>工作年限</label><select id="workYears"><option value="应届生">应届生</option><option value="1-3年">1-3年</option><option value="3-5年">3-5年</option><option value="5-10年">5-10年</option><option value="10年以上">10年以上</option></select></div></div>
+                                <div class="form-group"><label>期望职位</label><input type="text" id="expectedPosition" placeholder="如：前端开发工程师"></div>
+                                <div class="form-row"><div class="form-group"><label>期望薪资</label><select id="expectedSalary"><option value="面议">面议</option><option value="5k-10k">5K-10K</option><option value="10k-20k">10K-20K</option><option value="20k-30k">20K-30K</option><option value="30k-50k">30K-50K</option><option value="50k以上">50K以上</option></select></div><div class="form-group"><label>期望城市</label><input type="text" id="expectedCity" placeholder="如：北京、上海"></div></div>
+                                <div class="form-actions"><button type="button" class="btn btn-primary" onclick="saveResume()">保存</button></div>
+                            </form>
+                        </div>
+                        <div class="resume-section" id="resumeEducation"><h2>教育经历</h2><div id="educationList" class="experience-list"></div><button class="btn btn-outline btn-sm" onclick="showModal('educationModal')"><i class="fas fa-plus"></i> 添加教育经历</button></div>
+                        <div class="resume-section" id="resumeExperience"><h2>工作经历</h2><div id="experienceList" class="experience-list"></div><button class="btn btn-outline btn-sm" onclick="showModal('experienceModal')"><i class="fas fa-plus"></i> 添加工作经历</button></div>
+                        <div class="resume-section" id="resumeSkills"><h2>专业技能</h2>
+                            <div class="skills-container"><div class="skills-tags" id="skillsTags"></div>
+                                <div class="skill-input-group"><input type="text" id="skillInput" placeholder="输入技能名称，按回车添加" onkeypress="addSkill(event)"><button class="btn btn-primary btn-sm" onclick="addSkillManual()">添加</button></div>
+                                <div class="suggested-skills"><p>推荐技能：</p><div class="suggested-tags"><span onclick="addSuggestedSkill(this.textContent)">JavaScript</span><span onclick="addSuggestedSkill(this.textContent)">Python</span><span onclick="addSuggestedSkill(this.textContent)">Java</span><span onclick="addSuggestedSkill(this.textContent)">React</span><span onclick="addSuggestedSkill(this.textContent)">Vue.js</span><span onclick="addSuggestedSkill(this.textContent)">SQL</span><span onclick="addSuggestedSkill(this.textContent)">项目管理</span><span onclick="addSuggestedSkill(this.textContent)">数据分析</span><span onclick="addSuggestedSkill(this.textContent)">Go</span><span onclick="addSuggestedSkill(this.textContent)">TypeScript</span></div></div>
+                            </div>
+                        </div>
+                        <div class="resume-section" id="resumeProjects"><h2>项目经历</h2><div id="projectsList" class="experience-list"></div><button class="btn btn-outline btn-sm" onclick="showModal('projectModal')"><i class="fas fa-plus"></i> 添加项目经历</button></div>
+                        <div class="resume-section" id="resumeSelf"><h2>自我评价</h2><div class="form-group"><textarea id="selfEvaluation" rows="6" placeholder="请描述您的个人优势、职业目标等..." maxlength="500" oninput="updateCharCount()"></textarea><span class="char-count"><span id="charCount">0</span>/500</span></div><div class="form-actions"><button class="btn btn-primary" onclick="saveSelfEvaluation()">保存</button></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== APPLICATIONS ==================== -->
+        <div class="page" id="applicationsPage">
+            <div class="container">
+                <div class="page-header"><h1>投递记录</h1></div>
+                <div class="applications-tabs">
+                    <button class="tab-btn active" onclick="filterApplications('all',this)">全部</button>
+                    <button class="tab-btn" onclick="filterApplications('pending',this)">待处理</button>
+                    <button class="tab-btn" onclick="filterApplications('viewed',this)">已查看</button>
+                    <button class="tab-btn" onclick="filterApplications('interview',this)">面试邀请</button>
+                    <button class="tab-btn" onclick="filterApplications('rejected',this)">未通过</button>
+                </div>
+                <div class="applications-list" id="applicationsList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== FAVORITES ==================== -->
+        <div class="page" id="favoritesPage">
+            <div class="container">
+                <div class="page-header"><h1>收藏职位</h1></div>
+                <div class="favorites-list" id="favoritesList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== POST JOB ==================== -->
+        <div class="page" id="postJobPage">
+            <div class="container">
+                <div class="page-header"><h1>发布职位</h1></div>
+                <form id="postJobForm">
+                    <div class="form-section"><h3>基本信息</h3>
+                        <div class="form-row"><div class="form-group"><label>职位名称 <span class="required">*</span></label><input type="text" id="jobTitle" placeholder="如：高级前端开发工程师" required></div><div class="form-group"><label>职位类别 <span class="required">*</span></label><select id="jobCategory" required><option value="">请选择</option><option value="技术">技术/研发</option><option value="产品">产品/设计</option><option value="市场">市场/运营</option><option value="销售">销售/商务</option><option value="人事">人事/行政</option><option value="金融">金融/财务</option></select></div></div>
+                        <div class="form-row"><div class="form-group"><label>工作地点 <span class="required">*</span></label><input type="text" id="jobLocation" placeholder="如：北京朝阳区" required></div><div class="form-group"><label>职位类型</label><select id="jobType"><option value="全职">全职</option><option value="兼职">兼职</option><option value="实习">实习</option></select></div></div>
+                        <div class="form-row"><div class="form-group"><label>薪资范围(K/月) <span class="required">*</span></label><div class="salary-range"><input type="number" id="salaryMin" placeholder="最低" required><span>—</span><input type="number" id="salaryMax" placeholder="最高" required></div></div><div class="form-group"><label>学历要求</label><select id="jobEducation"><option value="不限">不限</option><option value="大专">大专</option><option value="本科" selected>本科</option><option value="硕士">硕士</option><option value="博士">博士</option></select></div></div>
+                        <div class="form-row"><div class="form-group"><label>经验要求</label><select id="jobExperience"><option value="不限">不限</option><option value="应届生">应届生</option><option value="1-3年">1-3年</option><option value="3-5年" selected>3-5年</option><option value="5-10年">5-10年</option><option value="10年以上">10年以上</option></select></div><div class="form-group"><label>招聘人数</label><input type="number" id="jobHeadcount" value="1" min="1"></div></div>
+                    </div>
+                    <div class="form-section"><h3>职位描述</h3>
+                        <div class="form-group"><label>岗位职责 <span class="required">*</span></label><textarea id="jobResponsibilities" rows="6" placeholder="每条职责一行" required></textarea></div>
+                        <div class="form-group"><label>任职要求 <span class="required">*</span></label><textarea id="jobRequirements" rows="6" placeholder="每条要求一行" required></textarea></div>
+                        <div class="form-group"><label>职位福利</label><div class="benefits-tags" id="benefitsTags"><span class="benefit-tag" onclick="toggleBenefit(this)">五险一金</span><span class="benefit-tag" onclick="toggleBenefit(this)">带薪年假</span><span class="benefit-tag" onclick="toggleBenefit(this)">年终奖</span><span class="benefit-tag" onclick="toggleBenefit(this)">股票期权</span><span class="benefit-tag" onclick="toggleBenefit(this)">弹性工作</span><span class="benefit-tag" onclick="toggleBenefit(this)">免费三餐</span><span class="benefit-tag" onclick="toggleBenefit(this)">健身房</span><span class="benefit-tag" onclick="toggleBenefit(this)">加班补贴</span><span class="benefit-tag" onclick="toggleBenefit(this)">定期体检</span><span class="benefit-tag" onclick="toggleBenefit(this)">团建活动</span></div></div>
+                    </div>
+                    <div class="form-actions"><button type="button" class="btn btn-primary" onclick="publishJob()">发布职位</button></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================== MY JOBS (Recruiter) ==================== -->
+        <div class="page" id="myJobsPage">
+            <div class="container">
+                <div class="page-header"><h1>我的职位</h1><button class="btn btn-primary btn-sm" onclick="showPage('postJob')"><i class="fas fa-plus"></i> 发布新职位</button></div>
+                <div class="my-jobs-list" id="myJobsList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== CANDIDATES (Recruiter) ==================== -->
+        <div class="page" id="candidatesPage">
+            <div class="container">
+                <div class="page-header"><h1>候选人管理</h1></div>
+                <div class="candidates-filter">
+                    <select id="candidateJobFilter" onchange="filterCandidates()"><option value="">全部职位</option></select>
+                    <select id="candidateStatusFilter" onchange="filterCandidates()"><option value="">全部状态</option><option value="pending">待处理</option><option value="viewed">已查看</option><option value="interview">面试邀请</option><option value="offer">已录用</option><option value="rejected">已拒绝</option></select>
+                </div>
+                <div class="candidates-list" id="candidatesList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== MESSAGES ==================== -->
+        <div class="page" id="messagesPage">
+            <div class="container">
+                <div class="messages-layout">
+                    <div class="messages-sidebar">
+                        <div class="messages-header"><h2>消息</h2><button class="btn-icon" onclick="markAllRead()" title="全部已读"><i class="fas fa-check-double"></i></button></div>
+                        <div class="conversations-list" id="conversationsList"></div>
+                    </div>
+                    <div class="chat-area" id="chatArea">
+                        <div class="chat-header" id="chatHeader"><div class="chat-user-info"><div class="chat-avatar"><span id="chatAvatar">?</span></div><div><h4 id="chatName">选择一个会话</h4><span id="chatStatus" class="online-status">-</span></div></div></div>
+                        <div class="chat-messages" id="chatMessages"><div class="chat-placeholder"><i class="fas fa-comment-dots"></i><p>选择一个会话开始聊天</p></div></div>
+                        <div class="chat-input" id="chatInput" style="display:none"><textarea id="messageInput" placeholder="输入消息..." onkeypress="handleMessageInput(event)"></textarea><button class="btn btn-primary send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PROFILE ==================== -->
+        <div class="page" id="profilePage">
+            <div class="container">
+                <div class="profile-layout">
+                    <div class="profile-card">
+                        <div class="profile-cover"></div>
+                        <div class="profile-avatar-wrapper"><div class="profile-avatar"><span id="profileAvatar">U</span></div></div>
+                        <div class="profile-info"><h2 id="profileName">用户名</h2><p id="profileRole" class="role-badge">求职者</p><p id="profileEmail">user@example.com</p></div>
+                        <div class="profile-stats">
+                            <div class="profile-stat"><span id="profileStat1">0</span><label>投递数</label></div>
+                            <div class="profile-stat"><span id="profileStat2">0</span><label>收藏数</label></div>
+                            <div class="profile-stat"><span id="profileStat3">0</span><label>面试数</label></div>
+                        </div>
+                    </div>
+                    <div class="profile-main">
+                        <div class="profile-section"><h3>账号设置</h3>
+                            <form><div class="form-row"><div class="form-group"><label>用户名</label><input type="text" id="profileUsername"></div><div class="form-group"><label>邮箱</label><input type="email" id="profileEmailInput"></div></div><div class="form-row"><div class="form-group"><label>手机号</label><input type="tel" id="profilePhone"></div><div class="form-group"><label>所在城市</label><input type="text" id="profileCity"></div></div><div class="form-actions"><button type="button" class="btn btn-primary" onclick="saveProfile()">保存修改</button></div></form>
+                        </div>
+                        <div class="profile-section"><h3>修改密码</h3>
+                            <form><div class="form-group"><label>当前密码</label><input type="password" id="currentPassword"></div><div class="form-row"><div class="form-group"><label>新密码</label><input type="password" id="newPassword"></div><div class="form-group"><label>确认新密码</label><input type="password" id="confirmPassword"></div></div><div class="form-actions"><button type="button" class="btn btn-primary" onclick="changePassword()">修改密码</button></div></form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== JOB DETAIL ==================== -->
+        <div class="page" id="jobDetailPage"><div class="container"><div class="job-detail-layout" id="jobDetailContent"></div></div></div>
+        <!-- ==================== COMPANY DETAIL ==================== -->
+        <div class="page" id="companyDetailPage"><div class="container"><div class="company-detail" id="companyDetailContent"></div></div></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col"><div class="footer-logo"><i class="fas fa-briefcase"></i><span>智聘通</span></div><p>连接优秀人才与理想机会<br>AI 驱动的智能求职招聘平台</p><div class="social-links"><a href="#"><i class="fab fa-weixin"></i></a><a href="#"><i class="fab fa-weibo"></i></a><a href="#"><i class="fab fa-zhihu"></i></a><a href="#"><i class="fab fa-github"></i></a></div></div>
+                <div class="footer-col"><h4>求职者</h4><a href="#" onclick="showPage('jobs')">找工作</a><a href="#" onclick="showPage('resume')">简历管理</a><a href="#" onclick="showPage('salary')">薪资查询</a><a href="#" onclick="showPage('blog')">面试技巧</a></div>
+                <div class="footer-col"><h4>招聘者</h4><a href="#" onclick="showPage('postJob')">发布职位</a><a href="#" onclick="showPage('candidates')">搜索人才</a><a href="#">招聘方案</a><a href="#">雇主品牌</a></div>
+                <div class="footer-col"><h4>关于我们</h4><a href="#">公司介绍</a><a href="#">联系我们</a><a href="#">用户协议</a><a href="#">隐私政策</a></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 智聘通 - 智能求职招聘平台</p></div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content"><div class="modal-header"><h2>欢迎回来</h2><button class="modal-close" onclick="closeModal('loginModal')">&times;</button></div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-user"></i><input type="text" id="loginUsername" placeholder="用户名" required></div></div>
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div></div>
+                    <div class="form-options"><label class="checkbox-label"><input type="checkbox" id="rememberMe"> 记住我</label><a href="#" class="forgot-link">忘记密码？</a></div>
+                    <button type="button" class="btn btn-primary btn-block" onclick="login()">登录</button>
+                </form>
+                <div class="login-footer"><p>还没有账号？ <a href="#" onclick="closeModal('loginModal');showModal('registerModal')">立即注册</a></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="registerModal">
+        <div class="modal-content"><div class="modal-header"><h2>创建账号</h2><button class="modal-close" onclick="closeModal('registerModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="register-tabs">
+                    <button class="register-tab active" onclick="switchRegisterTab('jobseeker')"><i class="fas fa-user"></i> 我要找工作</button>
+                    <button class="register-tab" onclick="switchRegisterTab('recruiter')"><i class="fas fa-building"></i> 我要招人</button>
+                </div>
+                <form>
+                    <input type="hidden" id="registerRole" value="jobseeker">
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-user"></i><input type="text" id="regUsername" placeholder="用户名" required></div></div>
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="邮箱" required></div></div>
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="regPassword" placeholder="密码（至少6位）" required></div></div>
+                    <div class="form-group"><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="regConfirmPassword" placeholder="确认密码" required></div></div>
+                    <div class="recruiter-fields" id="recruiterFields" style="display:none">
+                        <div class="form-group"><div class="input-icon"><i class="fas fa-building"></i><input type="text" id="regCompany" placeholder="公司名称"></div></div>
+                        <div class="form-group"><div class="input-icon"><i class="fas fa-id-badge"></i><input type="text" id="regPosition" placeholder="您的职位"></div></div>
+                    </div>
+                    <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="agreeTerms" required> 我已阅读并同意 <a href="#" style="color:var(--apple-blue)">用户协议</a> 和 <a href="#" style="color:var(--apple-blue)">隐私政策</a></label></div>
+                    <button type="button" class="btn btn-primary btn-block" onclick="register()">注册</button>
+                </form>
+                <div class="login-footer"><p>已有账号？ <a href="#" onclick="closeModal('registerModal');showModal('loginModal')">立即登录</a></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="educationModal">
+        <div class="modal-content"><div class="modal-header"><h2>添加教育经历</h2><button class="modal-close" onclick="closeModal('educationModal')">&times;</button></div>
+            <div class="modal-body"><form id="educationForm">
+                <div class="form-group"><label>学校名称 <span class="required">*</span></label><input type="text" id="eduSchool" placeholder="学校名称" required></div>
+                <div class="form-row"><div class="form-group"><label>学历</label><select id="eduDegree"><option value="大专">大专</option><option value="本科" selected>本科</option><option value="硕士">硕士</option><option value="博士">博士</option></select></div><div class="form-group"><label>专业 <span class="required">*</span></label><input type="text" id="eduMajor" placeholder="专业" required></div></div>
+                <div class="form-row"><div class="form-group"><label>开始时间</label><input type="month" id="eduStart"></div><div class="form-group"><label>结束时间</label><input type="month" id="eduEnd"></div></div>
+                <div class="form-group"><label>在校经历</label><textarea id="eduDescription" rows="3" placeholder="描述在校期间的成就"></textarea></div>
+                <div class="form-actions"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal('educationModal')">取消</button><button type="button" class="btn btn-primary btn-sm" onclick="saveEducation()">保存</button></div>
+            </form></div>
+        </div>
+    </div>
+
+    <div class="modal" id="experienceModal">
+        <div class="modal-content"><div class="modal-header"><h2>添加工作经历</h2><button class="modal-close" onclick="closeModal('experienceModal')">&times;</button></div>
+            <div class="modal-body"><form id="experienceForm">
+                <div class="form-row"><div class="form-group"><label>公司名称 <span class="required">*</span></label><input type="text" id="expCompany" placeholder="公司名称" required></div><div class="form-group"><label>职位 <span class="required">*</span></label><input type="text" id="expPosition" placeholder="职位名称" required></div></div>
+                <div class="form-row"><div class="form-group"><label>开始时间</label><input type="month" id="expStart"></div><div class="form-group"><label>结束时间</label><input type="month" id="expEnd"><label class="checkbox-label" style="margin-top:6px"><input type="checkbox" id="expCurrent" onchange="document.getElementById('expEnd').disabled=this.checked"> 至今</label></div></div>
+                <div class="form-group"><label>工作描述</label><textarea id="expDescription" rows="4" placeholder="工作职责和成就" required></textarea></div>
+                <div class="form-actions"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal('experienceModal')">取消</button><button type="button" class="btn btn-primary btn-sm" onclick="saveWorkExperience()">保存</button></div>
+            </form></div>
+        </div>
+    </div>
+
+    <div class="modal" id="projectModal">
+        <div class="modal-content"><div class="modal-header"><h2>添加项目经历</h2><button class="modal-close" onclick="closeModal('projectModal')">&times;</button></div>
+            <div class="modal-body"><form id="projectForm">
+                <div class="form-group"><label>项目名称 <span class="required">*</span></label><input type="text" id="projName" placeholder="项目名称" required></div>
+                <div class="form-row"><div class="form-group"><label>开始时间</label><input type="month" id="projStart"></div><div class="form-group"><label>结束时间</label><input type="month" id="projEnd"></div></div>
+                <div class="form-group"><label>项目描述 <span class="required">*</span></label><textarea id="projDescription" rows="3" placeholder="项目背景和目标" required></textarea></div>
+                <div class="form-group"><label>个人职责</label><textarea id="projRole" rows="3" placeholder="您的角色和贡献"></textarea></div>
+                <div class="form-group"><label>技术栈</label><input type="text" id="projTech" placeholder="如：React, Node.js"></div>
+                <div class="form-actions"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal('projectModal')">取消</button><button type="button" class="btn btn-primary btn-sm" onclick="saveProject()">保存</button></div>
+            </form></div>
+        </div>
+    </div>
+
+    <div class="modal modal-large" id="resumePreviewModal">
+        <div class="modal-content"><div class="modal-header"><h2>简历预览</h2><div class="modal-actions"><button class="modal-close" onclick="closeModal('resumePreviewModal')">&times;</button></div></div>
+            <div class="modal-body"><div class="resume-preview" id="resumePreview"></div></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
